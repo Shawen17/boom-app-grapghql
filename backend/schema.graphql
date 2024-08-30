@@ -1,0 +1,244 @@
+scalar DateTime
+
+
+type Query  {
+   greetings: String
+   test(_id:String): FormData
+   students(collegeId:String): [User]
+   user(id:ID!):User
+   login(input:Login): StringOrObject
+   getLoan(email:String) : [Loan]
+   getProfile(email:String): FormData
+   getUsers(page:Int!, limit:Int!,search:String) : UserProfile
+   advancedFilter(profile:ProfileInput,organization: OrganizationInput) : UserProfile
+   getAllLoans(page:Int!, limit:Int!,search:String): LoanProfile
+}
+
+union StringOrObject = User | StringResult
+
+
+type StringResult {
+  message: String
+}
+
+
+type Mutation{
+registerUser(input:Signup): String
+addProfile(input:FormDataInput): String
+newLoan(input:LoanInput) : String
+updateProfile(input:FormDataInput) : String
+updateStatus(email:String!,status:String!) : FormData
+adminLoanUpdate(email:String!, loanRepayment: Float!) : String
+updateLoanStatus(email:String!, status:String!) : Loan
+}
+
+
+type User{
+   _id:ID
+   firstName: String
+   lastName: String
+   email: String
+   state: String
+   phoneNumber: String
+   token: String
+   is_staff: Boolean
+}
+
+type College{
+   id: ID!
+   name: String
+   location:String
+   rating: Float
+}
+
+input Signup{
+   UserID: ID
+   email:String!
+   firstName: String!
+   lastName: String!
+   state: String!
+   password: String!
+}
+
+input Login{
+   email: String!
+   password: String!
+}
+
+input ProfileInput{
+_id:ID
+firstName:String
+lastName:String
+phoneNumber:String
+gender:String
+bvn:String
+address:String
+currency:String
+email:String
+userName:String
+status:String
+avatar: String
+}
+
+type Profile{
+_id:ID
+firstName:String
+lastName:String
+phoneNumber:String
+gender:String
+bvn:String
+address:String
+currency:String
+email:String
+userName:String
+status:String
+avatar:String
+}
+
+input GuarantorInput {
+guaAddress:String
+guaFirstName:String
+guaLastName:String
+guaGender:String
+guaNumber:String
+relationship:String
+}
+
+type Guarantor {
+guaAddress:String
+guaFirstName:String
+guaLastName:String
+guaGender:String
+guaNumber:String
+relationship:String
+}
+
+
+input SocialsInput{
+twitter: String
+facebook:String
+instagram:String
+}
+
+type Socials{
+twitter: String
+facebook:String
+instagram:String
+}
+
+input EducationInput {
+level:String
+}
+
+type Education {
+level:String
+}
+
+input OrganizationInput{
+orgName: String
+orgNumber:String
+employmentStatus:String
+sector:String
+duration:String
+officeEmail:String
+}
+
+type Organization{
+orgName: String
+orgNumber:String
+employmentStatus:String
+sector:String
+duration:String
+officeEmail:String
+}
+
+input AccountInput{
+accountName:String
+accountBalance: Float
+bank:String
+bvn:String
+accountNumber: String
+monthlyIncome: [Int]
+}
+
+type Account{
+bvn:String
+accountName:String
+accountBalance: Float
+bank:String
+accountNumber: String
+monthlyIncome: [Float]
+}
+
+input LoanSchemaInput{
+firstName:String
+lastName:String
+phoneNumber:String
+email:String
+bank: String
+duration:Int
+amount:Int
+loanStatus: String
+loanRepayment:Float
+}
+
+type LoanSchema{
+firstName:String
+lastName:String
+phoneNumber:String
+loanStatus: String
+email:String
+bank: String
+duration:Int
+amount:Int
+loanRepayment:Float
+}
+
+input FormDataInput{
+_id:ID
+profile:ProfileInput
+socials:SocialsInput
+education: EducationInput
+organization:OrganizationInput
+account:AccountInput
+guarantor: GuarantorInput
+}
+
+type FormData{
+_id:ID
+profile:Profile
+socials:Socials
+education: Education
+organization:Organization
+account:Account
+guarantor: Guarantor
+createdAt: DateTime
+}
+
+input LoanInput{
+guarantor:GuarantorInput
+loan: LoanSchemaInput
+account: AccountInput
+}
+
+type Loan{
+_id:ID
+guarantor:Guarantor
+loan: LoanSchema
+account: Account
+createdAt: DateTime
+}
+
+type UserProfile{
+users_paginated:[FormData]
+all_users: Int
+active: Int
+loan: Int
+savings: Int
+}
+
+type LoanProfile{
+loans_paginated : [Loan]
+all_loans: Int
+active: Int
+}

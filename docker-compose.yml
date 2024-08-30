@@ -1,0 +1,117 @@
+services:
+  frontend:
+    image: frontend:latest
+    container_name: frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+      - mariadb
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/frontend
+    environment:
+      CHOKIDAR_USEPOLLING: true
+      BACKEND_HOST: backend
+      REACT_APP_MEDIA_URL: ${REACT_APP_MEDIA_URL}
+    
+
+  metrics-server:
+    image: metrics-server:latest
+    container_name: metrics-server
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.metrics
+    ports:
+      - 3002:3002
+    
+
+  backend:
+    image: backend:latest
+    container_name: backend
+    ports:
+      - 9000:9000
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - mariadb
+    volumes:
+      - ./backend:/backend
+    environment:
+      CHOKIDAR_USEPOLLING: true
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_HOST: mariadb
+      MYSQL_PORT: 3306
+      DB_USER: ${DB_USER}
+      PASSWORD: ${PASSWORD}
+      CLUSTERNAME: ${CLUSTERNAME}
+      TOKEN_SECRET: ${TOKEN_SECRET}
+    
+
+  mariadb:
+    image: mariadb:10.2
+    container_name: mariadb
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: marz
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    restart: on-failure
+    volumes:
+      - ./db/marzdata.sql:/docker-entrypoint-initdb.d/marzdata.sql
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  mysqld_exporter:
+    image: quay.io/prometheus/mysqld-exporter
+    container_name: mysqld_exporter
+    environment:
+      - DATA_SOURCE_NAME=monitoring_user:${MYSQL_PASSWORD}@tcp(mariadb:3306)/
+    ports:
+      - 9104:9104
+    volumes:
+      - ./.my.cnf:/etc/mysql/.my.cnf
+    command: ["--config.my-cnf=/etc/mysql/.my.cnf"]
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
+    ports:
+      - 9090:9090
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yaml"
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3001:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+
+volumes:
+  grafana-storage:
+  mariadb_data:
+
+
