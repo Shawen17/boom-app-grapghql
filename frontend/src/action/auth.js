@@ -197,6 +197,7 @@ export const fetch_loan = (email) => async (dispatch) => {
           duration
           amount
           loanStatus
+          loanRepayment
         },
         account{
           bank
