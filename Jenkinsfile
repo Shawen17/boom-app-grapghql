@@ -14,14 +14,10 @@ pipeline {
         DB_USER=credentials('DB_USER')
         PASSWORD=credentials('PASSWORD')
         CLUSTERNAME=credentials('CLUSTERNAME')
-
         TOKEN_SECRET=credentials('TOKEN_SECRET')
         MYSQL_USER=credentials('MYSQL_USER')
         MYSQL_PASSWORD=credentials('MYSQL_PASSWORD')
         MYSQL_ROOT_PASSWORD=credentials('MYSQL_ROOT_PASSWORD')
-
-
-        
         REACT_APP_LENDSQR_API_URL=''
         REACT_APP_MEDIA_URL=credentials('REACT_APP_MEDIA_URL')
        
@@ -164,10 +160,10 @@ pipeline {
                         "DB_USER=$DB_USER",
                         "PASSWORD=$PASSWORD",
                         "CLUSTERNAME=$CLUSTERNAME",
-                        "TOKEN_SECRET=$TOKEN_SECRET"
-                        "MYSQL_USER=$MYSQL_USER"
-                        "MYSQL_PASSWORD=$MYSQL_PASSWORD"
-                        "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD"
+                        "TOKEN_SECRET=$TOKEN_SECRET",
+                        "MYSQL_USER=$MYSQL_USER",
+                        "MYSQL_PASSWORD=$MYSQL_PASSWORD",
+                        "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD",
                         "REACT_APP_MEDIA_URL=$REACT_APP_MEDIA_URL",
                         "BACKEND_IMAGE=$BACKEND_IMAGE",
                         "FRONTEND_IMAGE=$FRONTEND_IMAGE",
