@@ -1,0 +1,6 @@
+2024-09-03 11:38:36 info: Hello world
+2024-09-03 11:38:36 warn: Warning message
+2024-09-03 11:38:36 debug: Debugging info
+{"level":"info","message":"Hello world","timestamp":"2024-09-03 11:41:50"}
+{"level":"warn","message":"Warning message","timestamp":"2024-09-03 11:41:50"}
+{"level":"debug","message":"Debugging info","timestamp":"2024-09-03 11:41:50"}

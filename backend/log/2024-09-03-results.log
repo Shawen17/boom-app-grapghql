@@ -1,0 +1,23 @@
+{"level":"info","message":"Hello world","timestamp":"2024-09-03 12:05:00"}
+{"level":"warn","message":"Warning message","timestamp":"2024-09-03 12:05:00"}
+{"level":"debug","message":"Debugging info","timestamp":"2024-09-03 12:05:00"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-03 12:29:22"}
+{"level":"warn","message":"Connection failed: , retrying in 3 seconds...","timestamp":"2024-09-03 12:29:22"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-03 12:29:23"}
+{"level":"warn","message":"Connection failed: , retrying in 6 seconds...","timestamp":"2024-09-03 12:29:25"}
+{"level":"warn","message":"Connection failed: , retrying in 9 seconds...","timestamp":"2024-09-03 12:29:31"}
+{"level":"warn","message":"Connection failed: , retrying in 12 seconds...","timestamp":"2024-09-03 12:29:40"}
+{"level":"warn","message":"Connection failed: , retrying in 15 seconds...","timestamp":"2024-09-03 12:29:52"}
+{"level":"error","message":"Could not connect to the database after several attempts","timestamp":"2024-09-03 12:30:07"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-03 12:32:53"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-03 12:32:53"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-03 12:32:53"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-03 14:50:42"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-03 14:50:42"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-03 14:50:43"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-03 14:51:18"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-03 14:51:18"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-03 14:51:19"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-03 16:40:34"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-03 16:40:34"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-03 16:40:35"}

@@ -1,3 +1,4 @@
+const { Histogram } = require("prom-client");
 const db = require("./src/models");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
@@ -5,33 +6,52 @@ var jwt = require("jsonwebtoken");
 const { Search, AdvanceFilter } = require("./src/controllers/ProfilePipeline");
 const AllLoans = require("./src/controllers/LoanPipeline");
 const mongoose = require("mongoose");
+const logger = require("./logger");
 
 dotenv.config();
 
-const UserProfile = require("./src/models/profile");
+const UserProfile = db.UserProfile;
 const User = db.User;
 const Loan = db.Loan;
 
+// Create a Histogram for measuring resolver execution time
+const resolverDuration = new Histogram({
+  name: "graphql_resolver_duration_seconds",
+  help: "Duration of GraphQL resolver execution in seconds",
+  labelNames: ["resolver"],
+});
+
+// Wrap each resolver to measure its execution time
+const wrapResolver =
+  (resolverName, resolverFn) => async (root, args, context, info) => {
+    const end = resolverDuration.startTimer({ resolver: resolverName });
+    try {
+      return await resolverFn(root, args, context, info);
+    } finally {
+      end();
+    }
+  };
+
 const Query = {
   greetings: () => "Test Success, GraphQL server is up & running !!",
-  test: async (_, args, { user }) => {
+  test: wrapResolver("test", async (_, args, { user }) => {
     const id = new mongoose.Types.ObjectId(`${args._id}`);
     const person = await UserProfile.findOne({
       _id: id,
     }).exec();
-    console.log(person);
+    logger.info(person);
     return person;
-  },
+  }),
   students: () => db.students.list(),
-  user: async (root, args, context, info) => {
+  user: wrapResolver("user", async (root, args, context, info) => {
     const user = await User.findOne({
       where: {
         UserID: args.id,
       },
     });
     return user;
-  },
-  login: async (root, args, context, info) => {
+  }),
+  login: wrapResolver("login", async (root, args, context, info) => {
     const userExist = await User.findOne({
       where: {
         email: args.input.email,
@@ -66,26 +86,29 @@ const Query = {
       token: token,
       is_staff: userExist.is_staff,
     };
-  },
-  getLoan: async (_, args, { user }) => {
+  }),
+  getLoan: wrapResolver("getLoan", async (_, args, { user }) => {
     if (!user) {
+      logger.error("Unauthorized");
       throw new Error("Unauthorized");
     }
     const loan = await Loan.find({ "loan.email": args.email }).exec();
     return loan;
-  },
-  getProfile: async (_, args, { user }) => {
+  }),
+  getProfile: wrapResolver("getProfile", async (_, args, { user }) => {
     if (!user) {
+      logger.error("Unauthorized");
       throw new Error("Unauthorized");
     }
     const profile = await UserProfile.findOne({
       "profile.email": args.email,
     }).exec();
     return profile;
-  },
+  }),
 
-  getUsers: async (_, args, { user }) => {
+  getUsers: wrapResolver("getUsers", async (_, args, { user }) => {
     if (!user) {
+      logger.error("Unauthorized");
       throw new Error("Unauthorized");
     }
     const result = await Search(args.page, args.limit, args.search);
@@ -97,12 +120,15 @@ const Query = {
       active: result[0].totalActive,
       savings: result[0].totalWithSavings,
     };
-  },
-  advancedFilter: async (_, args, { user }) => {
-    if (!user) throw new Error("Unauthorized");
+  }),
+  advancedFilter: wrapResolver("advancedFilter", async (_, args, { user }) => {
+    if (!user) {
+      logger.error("Unauthorized");
+      throw new Error("Unauthorized");
+    }
     const condition = { ...args };
     const result = await AdvanceFilter(condition);
-    console.log(result);
+    logger.info(result);
     return {
       users_paginated: result[0].documents,
       all_users: result[0].totalDocuments,
@@ -110,9 +136,12 @@ const Query = {
       active: result[0].totalActive,
       savings: result[0].totalWithSavings,
     };
-  },
-  getAllLoans: async (_, args, { user }) => {
-    if (!user) throw new Error("Unauthorized");
+  }),
+  getAllLoans: wrapResolver("getAllLoans", async (_, args, { user }) => {
+    if (!user) {
+      logger.error("Unauthorized");
+      throw new Error("Unauthorized");
+    }
     const result = await AllLoans(args.page, args.limit, args.search);
 
     return {
@@ -120,36 +149,40 @@ const Query = {
       all_loans: result[0].totalDocuments,
       active: result[0].totalWithLoan,
     };
-  },
+  }),
 };
 
 const Mutation = {
-  registerUser: async (root, args, context, info) => {
-    try {
-      const user = await User.findOne({
-        where: {
-          email: args.input.email,
-        },
-      });
+  registerUser: wrapResolver(
+    "registerUser",
+    async (root, args, context, info) => {
+      try {
+        const user = await User.findOne({
+          where: {
+            email: args.input.email,
+          },
+        });
 
-      if (user) {
-        return "email already registered";
+        if (user) {
+          return "email already registered";
+        }
+        const new_user = {
+          ...args.input,
+          password: bcrypt.hashSync(args.input.password, 8),
+        };
+        const newUser = User.create(new_user);
+        if (newUser) {
+          return "registration successful";
+        } else {
+          return "registration unsuccessful";
+        }
+      } catch (err) {
+        logger.error(err);
+        return `cannot fetch from database ${err}`;
       }
-      const new_user = {
-        ...args.input,
-        password: bcrypt.hashSync(args.input.password, 8),
-      };
-      const newUser = User.create(new_user);
-      if (newUser) {
-        return "registration successful";
-      } else {
-        return "registration unsuccessful";
-      }
-    } catch (err) {
-      return `cannot fetch from database ${err}`;
     }
-  },
-  addProfile: async (root, args, context, info) => {
+  ),
+  addProfile: wrapResolver("addProfile", async (root, args, context, info) => {
     const user = await UserProfile.findOne({
       "profile.email": args.input.profile.email,
     }).exec();
@@ -158,19 +191,21 @@ const Mutation = {
       const savedProfile = await newUser.save();
       return `Profile ${savedProfile._id.toString()} added`;
     }
-    console.log("Profile Already Exists");
+    logger.info("Profile Already Exists");
     return "Profile Already Exists";
-  },
-  newLoan: async (_, args, { user }) => {
+  }),
+  newLoan: wrapResolver("newLoan", async (_, args, { user }) => {
     if (!user) {
+      logger.info("Unauthorized");
       throw new Error("Unauthorized");
     }
     const newLoan = new Loan(args.input);
     await newLoan.save();
     return "Loan Application Successful";
-  },
-  updateProfile: async (_, args, { user }) => {
+  }),
+  updateProfile: wrapResolver("updateProfile", async (_, args, { user }) => {
     if (!user) {
+      logger.info("Unauthorized");
       throw new Error("Unauthorized");
     }
     let query = {};
@@ -192,9 +227,12 @@ const Mutation = {
       { upsert: true }
     ).exec();
     return "Profile Updated";
-  },
-  updateStatus: async (_, args, { user }) => {
-    if (!user) throw new Error("Unauthorized");
+  }),
+  updateStatus: wrapResolver("updateStatus", async (_, args, { user }) => {
+    if (!user) {
+      logger.info("Unauthorized");
+      throw new Error("Unauthorized");
+    }
     const person = await UserProfile.findOneAndUpdate(
       { "profile.email": args.email },
       { $set: { "profile.status": args.status } },
@@ -202,37 +240,37 @@ const Mutation = {
     ).exec();
 
     return person;
-  },
-  adminLoanUpdate: async (_, args, { user }) => {
-    if (!user) throw new Error("Unauthorized");
-    await Loan.updateOne(
-      { "loan.email": args.email },
-      { $set: { "loan.loanRepayment": args.loanRepayment } }
-    ).exec();
-    return "Updated Successfully";
-  },
-  updateLoanStatus: async (_, args, { user }) => {
-    if (!user) throw new Error("Unauthorized");
-    const result = await Loan.findOneAndUpdate(
-      { "loan.email": args.email },
-      { $set: { "loan.loanStatus": args.status } }
-    ).exec();
-    return result;
-  },
+  }),
+  adminLoanUpdate: wrapResolver(
+    "adminLoanUpdate",
+    async (_, args, { user }) => {
+      if (!user) {
+        logger.info("Unauthorized");
+        throw new Error("Unauthorized");
+      }
+      await Loan.updateOne(
+        { "loan.email": args.email },
+        { $set: { "loan.loanRepayment": args.loanRepayment } }
+      ).exec();
+      return "Updated Successfully";
+    }
+  ),
+  updateLoanStatus: wrapResolver(
+    "updateLoanStatus",
+    async (_, args, { user }) => {
+      if (!user) {
+        logger.info("Unauthorized");
+        throw new Error("Unauthorized");
+      }
+      const result = await Loan.findOneAndUpdate(
+        { "loan.email": args.email },
+        { $set: { "loan.loanStatus": args.status } }
+      ).exec();
+      return result;
+    }
+  ),
 };
 
-// const Student = {
-//   fullName: (root, args, context, info) => {
-//     return root.firstName + " " + root.lastName;
-//   },
-//   college: (root, args, context, info) => {
-//     return db.colleges.get(root.collegeId);
-//   },
-//   schoolRating: (root, args, context, info) => {
-//     const sch = db.colleges.get(root.collegeId);
-//     return sch.rating;
-//   },
-// };
 const StringOrObject = {
   __resolveType(obj, context, info) {
     if (obj.message) {

@@ -1,4 +1,5 @@
-const UserProfile = require("../models/profile"); // Adjust the path as needed
+const { UserProfile } = require("../models/profile"); // Adjust the path as needed
+const logger = require("../../logger");
 
 async function Search(page, limit, search) {
   const skip = (page - 1) * limit;
@@ -18,11 +19,8 @@ async function Search(page, limit, search) {
                   { "profile.firstName": { $regex: regexPattern } },
                   { "profile.lastName": { $regex: regexPattern } },
                   { "profile.status": { $regex: regexPattern } },
-                  { "profile.address": { $regex: regexPattern } },
                   { "organization.orgName": { $regex: regexPattern } },
-                  { "organization.employmentStatus": { $regex: regexPattern } },
                   { "organization.sector": { $regex: regexPattern } },
-                  { "organization.officeEmail": { $regex: regexPattern } },
                 ],
               },
             ],
@@ -105,7 +103,7 @@ async function Search(page, limit, search) {
     const result = await UserProfile.aggregate(createPipeline());
     return result;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 }
 

@@ -1,4 +1,5 @@
 const Loan = require("../models/loan");
+const logger = require("../../logger");
 
 async function AllLoans(page, limit, search) {
   const skip = (page - 1) * limit;
@@ -17,12 +18,8 @@ async function AllLoans(page, limit, search) {
                   { "loan.firstName": { $regex: regexPattern } },
                   { "loan.lastName": { $regex: regexPattern } },
                   { "loan.bank": { $regex: regexPattern } },
-                  { "loan.phoneNumber": { $regex: regexPattern } },
                   { "loan.loanStatus": { $regex: regexPattern } },
                   { "loan.amount": { $regex: regexPattern } },
-                  { "guarantor.guaFirstName": { $regex: regexPattern } },
-                  { "guarantor.guaLastName": { $regex: regexPattern } },
-                  { "guarantor.guaGender": { $regex: regexPattern } },
                 ],
               },
             ],
@@ -93,7 +90,7 @@ async function AllLoans(page, limit, search) {
     const result = await Loan.aggregate(createPipeline());
     return result;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 }
 

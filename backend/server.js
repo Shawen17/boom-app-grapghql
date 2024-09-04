@@ -1,12 +1,13 @@
 const { ApolloServer } = require("apollo-server-express");
 const cors = require("cors");
 const express = require("express");
-const { connect, mongo_connect } = require("./src/config/db");
+const { connect } = require("./src/config/db");
 const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 const { expressjwt } = require("express-jwt");
 const client = require("prom-client");
 const bodyParser = require("body-parser");
+const logger = require("./logger");
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ const port = process.env.PORT || 9000;
 const app = express();
 
 connect();
-mongo_connect();
+
 client.collectDefaultMetrics();
 
 const fs = require("fs");
@@ -57,7 +58,7 @@ app.use(
 );
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  logger.error(err.stack);
   res.status(500).send("Something broke!");
 });
 
@@ -87,7 +88,7 @@ const server = new ApolloServer({
   server.applyMiddleware({ app });
 
   app.listen(port, () => {
-    console.log(
+    logger.info(
       `Server running at http://localhost:${port}${server.graphqlPath}`
     );
   });

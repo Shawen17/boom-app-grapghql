@@ -44,6 +44,7 @@ services:
       PASSWORD: ${PASSWORD}
       CLUSTERNAME: ${CLUSTERNAME}
       TOKEN_SECRET: ${TOKEN_SECRET}
+      NOD_ENV: ${NOD_ENV}
     
 
   mariadb:

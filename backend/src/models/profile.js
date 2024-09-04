@@ -1,15 +1,4 @@
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-
-dotenv.config();
-
-DB_USER = process.env.DB_USER;
-PASSWORD = process.env.PASSWORD;
-CLUSTERNAME = process.env.CLUSTERNAME;
-
-mongoose.connect(
-  `mongodb+srv://${DB_USER}:${PASSWORD}@${CLUSTERNAME}.jzsljb4.mongodb.net/user_details`
-);
+const { mongoose } = require("../config/db");
 
 const profileSchema = new mongoose.Schema(
   {
@@ -17,11 +6,13 @@ const profileSchema = new mongoose.Schema(
       type: String,
       required: "Your firstname is required",
       max: 50,
+      index: true,
     },
     lastName: {
       type: String,
       required: "Your lastname is required",
       max: 50,
+      index: true,
     },
     phoneNumber: {
       type: String,
@@ -56,14 +47,17 @@ const profileSchema = new mongoose.Schema(
       type: String,
       required: "Your email is required",
       max: 50,
+      index: true,
     },
     userName: {
       type: String,
       max: 50,
+      index: true,
     },
     status: {
       type: String,
       max: 25,
+      index: true,
     },
   },
   { _id: false }
@@ -137,6 +131,7 @@ const organizationSchema = new mongoose.Schema(
       type: String,
       required: "Your address is required",
       max: 30,
+      index: true,
     },
     orgNumber: {
       type: String,
@@ -149,6 +144,7 @@ const organizationSchema = new mongoose.Schema(
     sector: {
       type: String,
       max: 50,
+      index: true,
     },
     duration: {
       type: String,
@@ -203,4 +199,4 @@ const mongoUserProfileSchema = new mongoose.Schema(
 
 const UserProfile = mongoose.model("Profile", mongoUserProfileSchema, "users");
 
-module.exports = UserProfile;
+module.exports = { UserProfile, guarantorSchema, accountSchema };

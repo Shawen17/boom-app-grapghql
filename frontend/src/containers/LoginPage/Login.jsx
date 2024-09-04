@@ -46,7 +46,7 @@ const Login = ({ reset, login, isStaff, isAuthenticated, loginFailed }) => {
       }
     } else if (loginFailed) {
       setModalOn(false);
-      setError("email or password incorrect");
+      // setError("email or password incorrect");
     }
   }, [isAuthenticated, navigate, loginFailed, msg, isStaff]);
 
@@ -68,7 +68,8 @@ const Login = ({ reset, login, isStaff, isAuthenticated, loginFailed }) => {
     const email = inputValues.email;
     const password = inputValues.password;
     setMsg("Enter details to login");
-    await login(email, password);
+    const err = await login(email, password);
+    err && setError(err);
   };
 
   return (

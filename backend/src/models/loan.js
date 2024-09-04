@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+const { mongoose } = require("../config/db");
+const { guarantorSchema, accountSchema } = require("./profile");
 
 const loanSchema = new mongoose.Schema(
   {
@@ -6,11 +7,13 @@ const loanSchema = new mongoose.Schema(
       type: String,
       required: "Your firstname is required",
       max: 50,
+      index: true,
     },
     lastName: {
       type: String,
       required: "Your lastname is required",
       max: 50,
+      index: true,
     },
     phoneNumber: {
       type: String,
@@ -20,92 +23,33 @@ const loanSchema = new mongoose.Schema(
     loanStatus: {
       type: String,
       max: 30,
+      index: true,
     },
     email: {
       type: String,
       max: 200,
+      index: true,
     },
     bank: {
       type: String,
       required: "Your bank is required",
       max: 100,
+      index: true,
     },
 
     duration: {
       type: Number,
-
       max: 50,
     },
     amount: {
       type: Number,
       required: "Loan amount is required",
       max: 2000000,
+      index: true,
     },
 
     loanRepayment: {
       type: Number,
-    },
-  },
-  { _id: false }
-);
-
-const guarantorSchema = new mongoose.Schema(
-  {
-    guaAddress: {
-      type: String,
-      required: "Your address is required",
-      max: 100,
-    },
-    guaFirstName: {
-      type: String,
-      required: "Your firstname is required",
-      max: 50,
-    },
-    guaLastName: {
-      type: String,
-      required: "Your lastname is required",
-      max: 50,
-    },
-    guaGender: {
-      type: String,
-      max: 10,
-    },
-    guaNumber: {
-      type: String,
-      required: "Your phone number is required",
-      max: 15,
-    },
-    relationship: {
-      type: String,
-
-      max: 50,
-    },
-  },
-  { _id: false }
-);
-
-const accountSchema = new mongoose.Schema(
-  {
-    accountNumber: {
-      type: String,
-      required: "Your account Number is required",
-      max: 30,
-    },
-    accountBalance: {
-      type: Number,
-    },
-
-    bank: {
-      type: String,
-      max: 30,
-    },
-    monthlyIncome: {
-      type: Array,
-    },
-
-    bvn: {
-      type: String,
-      max: 30,
     },
   },
   { _id: false }
