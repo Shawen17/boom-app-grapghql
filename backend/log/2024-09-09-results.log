@@ -1,0 +1,22 @@
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-09 00:22:38"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-09 00:22:38"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-09 00:22:39"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-09 00:40:40"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-09 00:40:41"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-09 00:40:41"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-09 00:57:01"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-09 00:57:01"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-09 00:57:02"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-09 00:57:50"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-09 00:57:51"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-09 00:57:51"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-09 01:09:55"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-09 01:09:55"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-09 01:09:56"}
+{"level":"error","message":"Error in NewLoan: Loan validation failed: account.accountName: Your address is required","timestamp":"2024-09-09 01:11:58"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-09 01:13:44"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-09 01:13:45"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-09 01:13:45"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-09 01:34:13"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-09 01:34:14"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-09 01:34:14"}

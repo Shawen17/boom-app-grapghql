@@ -162,7 +162,6 @@ const accountSchema = new mongoose.Schema(
   {
     accountName: {
       type: String,
-      required: "Your address is required",
       max: 30,
     },
     accountBalance: {

@@ -14,6 +14,7 @@ import UserDashboard from "./containers/UserDashboardPage/UserDashboard";
 import LoanDashboard from "./containers/LoanPage/LoanDashboard";
 import LoanDetails from "./containers/LoanPage/LoanDetails";
 import UpdateLoanForm from "./containers/LoanPage/UpdateLoanForm";
+import GuarantorPage from "./containers/GuarantorPage/GuarantorPage";
 import ProfileForm from "./components/user/ProfileForm";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthUserRoute from "./components/AuthUserRoute";
@@ -70,6 +71,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <LoanDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/guarantors"
+            element={
+              <ProtectedRoute>
+                <GuarantorPage />
               </ProtectedRoute>
             }
           />

@@ -17,13 +17,14 @@ const loanSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      required: "Your phonenumber is required",
+      required: "Your phone number is required",
       max: 30,
     },
     loanStatus: {
       type: String,
       max: 30,
       index: true,
+      default: "Pending",
     },
     email: {
       type: String,

@@ -200,11 +200,14 @@ td {
   line-height: 19px;
   color: #213f7d;
   text-decoration: none;
-  color:rgba(81, 75, 75)
+  
 }
 
 .sidebar-link:hover {
-  background-color: rgba(127, 255, 212, 0.1);
+  
+  transition:1s linear ease-in-out;
+  transform: translateX(6px);
+  color:rgba(0, 157, 196,0.5)
 }
 
 .sidebar-title {

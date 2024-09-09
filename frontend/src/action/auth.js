@@ -164,6 +164,7 @@ export const new_loan = (data) => async (dispatch) => {
 
   try {
     const res = await axios.post("http://localhost:9000/graphql", body, config);
+    console.log(res.data.data.newLoan);
     return res.data.data.newLoan;
   } catch (err) {
     return err.message;

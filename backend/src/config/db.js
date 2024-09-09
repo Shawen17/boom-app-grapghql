@@ -21,7 +21,7 @@ mongoose.connect(
   }
 );
 
-mongoose.connection.setMaxListeners(20);
+mongoose.connection.setMaxListeners(50);
 
 mongoose.connection.on("connected", () => {
   logger.info("Mongoose connected to MongoDB");
@@ -51,9 +51,8 @@ mongoose.set("debug", function (collectionName, method, query, doc) {
       );
     }
   };
-
-  mongoose.connection.removeListener("commandStarted", commandStartedListener);
   mongoose.connection.on("commandStarted", commandStartedListener);
+  mongoose.connection.removeListener("commandStarted", commandStartedListener);
 });
 
 MYSQL_USER = process.env.MYSQL_USER;

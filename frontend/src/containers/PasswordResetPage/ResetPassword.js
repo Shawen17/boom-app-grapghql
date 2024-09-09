@@ -22,7 +22,7 @@ const ResetPassword = ({ reset_password }) => {
 
   return (
     <motion.div
-      initial={{ scale: 0 }}
+      initial={{ scale: 0.8 }}
       animate={{ rotate: 0, scale: 1 }}
       transition={{
         type: "spring",

@@ -56,7 +56,7 @@ const SideBar = () => {
         Users
       </Link>
 
-      <Link className="nav-link mb-4 sidebar-link" to="/">
+      <Link className="nav-link mb-4 sidebar-link" to="/guarantors">
         <span>
           <img src="/static/icons/guarantor.png" alt="guarantorlogo" />
         </span>

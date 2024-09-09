@@ -12,6 +12,7 @@ type Query  {
    getUsers(page:Int!, limit:Int!,search:String) : UserProfile
    advancedFilter(profile:ProfileInput,organization: OrganizationInput) : UserProfile
    getAllLoans(page:Int!, limit:Int!,search:String): LoanProfile
+   
 }
 
 union StringOrObject = User | StringResult
