@@ -20,3 +20,6 @@
 {"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-09 01:34:13"}
 {"level":"info","message":"Database connected successfully.","timestamp":"2024-09-09 01:34:14"}
 {"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-09 01:34:14"}
+{"level":"info","message":"Server running at http://localhost:9000/graphql","timestamp":"2024-09-09 01:42:28"}
+{"level":"info","message":"Database connected successfully.","timestamp":"2024-09-09 01:42:29"}
+{"level":"info","message":"Mongoose connected to MongoDB","timestamp":"2024-09-09 01:42:29"}
